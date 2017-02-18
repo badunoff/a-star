@@ -1,10 +1,11 @@
 import java.awt.Point;
 
 
-public class MapCell {
+public class MapCell implements Comparable<MapCell>{
 	private boolean open;
 	private int search;
 	private int g;
+	private int h;
 	private Point location;
 	private Point cameFrom;
 	
@@ -35,6 +36,16 @@ public class MapCell {
 		this.g = g;
 	}
 	
+	public int getH()
+	{
+		return h;
+	}
+	
+	public void setH(int h)
+	{
+		this.h = h;
+	}
+	
 	public Point getCameFrom(){
 		return cameFrom;
 	}
@@ -57,5 +68,20 @@ public class MapCell {
 	
 	public void setSearch(int search){
 		this.search = search;
+	}
+	
+	public int compareTo(MapCell other) throws ClassCastException
+	{
+		if (!(other instanceof MapCell))
+		      throw new ClassCastException("A Person object expected.");
+		int otherH = ((MapCell)other).getH();
+		int otherG = ((MapCell)other).getG();
+		if((this.h + this.g) > (otherH + otherG))
+			return 1;
+		if((this.h + this.g) < (otherH + otherG))
+			return -1;
+		if(this.g > otherG)
+			return 1;
+		return -1;
 	}
 }
