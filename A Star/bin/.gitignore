@@ -5,3 +5,5 @@
 /Direction.class
 /MapCell.class
 /BinaryHeap.class
+/PathComputer.class
+/StepNode.class
