@@ -1,6 +1,4 @@
 import java.awt.Point;
-import java.io.Console;
-import java.io.IOException;
 import java.util.Scanner;
 
 public class Driver {
@@ -18,17 +16,13 @@ public class Driver {
 		
 		System.out.println(start);
 		System.out.println(finish);
-		System.out.println(Field.arrayToString(field.field, start, start, finish));
+		System.out.println(Field.arrayToString(field.field));
 		
 		
 		Actor actor = new Actor(field, DIMX, DIMY, start, finish);
 		
 		promptEnterKey();
 		
-		
-		int enter = 13;
-		
-		int counter = 1;
 		for(int i = 1; i < 10000; i++ ){
 			System.out.println(i);
 			boolean success = actor.dumbStep();
@@ -42,7 +36,6 @@ public class Driver {
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			//promptEnterKey();
@@ -54,5 +47,6 @@ public class Driver {
 		   System.out.println("Press \"ENTER\" to continue...");
 		   Scanner scanner = new Scanner(System.in);
 		   scanner.nextLine();
+		   scanner.close();
 		}
 }

@@ -10,7 +10,7 @@ public class Actor {
 	Point goal;
 	Field field;
 	
-	boolean[][] known_map;
+	MapCell[][] known_map;
 	Queue<Point> queue;
 	Point above, below, left, right;
 	
@@ -21,33 +21,40 @@ public class Actor {
 		
 		this.field = field;
 		
-		this.known_map = new boolean[mapx][mapy];
-		for (boolean[] row: known_map)
-			Arrays.fill(row, true);
+		this.known_map = new MapCell[mapx][mapy];
+		for (int x = 0; x < mapx; x++)
+			for (int y = 0; y < mapy; y++)
+				 this.known_map[x][y] = new MapCell(new Point(x,y));
 		this.queue = null;
 		
 		setNeighbors();
 		checkNeighbors();
 	}
 	
+	/**
+	    * sets neighbors' open values.
+	*/
 	private void checkNeighbors(){
 		if(above != null){ //check up
-			known_map[above.x][above.y] = field.check_loc(above); 
+			known_map[above.x][above.y].setOpen(field.check_loc(above)); 
 		}
 		
 		if(below != null){ //check down
-			known_map[below.x][below.y] = field.check_loc(below);
+			known_map[below.x][below.y].setOpen(field.check_loc(below));
 		}
 		
 		if(left != null){ //check left
-			known_map[left.x][left.y] = field.check_loc(left);
+			known_map[left.x][left.y].setOpen(field.check_loc(left));
 		}
 		
 		if(right != null){ //check right
-			known_map[right.x][right.y] = field.check_loc(right);
+			known_map[right.x][right.y].setOpen(field.check_loc(right));
 		}
 	}
 	
+	/**
+	    * sets coordinates of neighbors and null if they are out of bounds.
+	*/
 	private void setNeighbors(){
 		if(cur_loc.x >= 0 && cur_loc.x < known_map.length && cur_loc.y + 1 >= 0 && cur_loc.y + 1 < known_map[0].length){ //check up
 			above = new Point(cur_loc.x, cur_loc.y + 1); 
@@ -78,8 +85,11 @@ public class Actor {
 		}
 	}
 	
+	/**
+	    * @return true if valid move
+	*/
 	public boolean moveUp(){
-		if(above != null && known_map[above.x][above.y]){ //check up
+		if(above != null && known_map[above.x][above.y].isOpen()){ //check up
 			cur_loc.setLocation(above.x, above.y);
 			setNeighbors();
 			checkNeighbors();
@@ -90,8 +100,11 @@ public class Actor {
 		}
 	}
 	
+	/**
+	    * @return true if valid move
+	*/
 	public boolean moveDown(){
-		if(below != null && known_map[below.x][below.y]){ //check down
+		if(below != null && known_map[below.x][below.y].isOpen()){ //check down
 			cur_loc.setLocation(below.x, below.y);
 			setNeighbors();
 			checkNeighbors();
@@ -102,8 +115,11 @@ public class Actor {
 		}
 	}
 	
+	/**
+	    * @return true if valid move
+	*/
 	public boolean moveRight(){
-		if(right != null && known_map[right.x][right.y]){ //check down
+		if(right != null && known_map[right.x][right.y].isOpen()){ //check down
 			cur_loc.setLocation(right.x, right.y);
 			setNeighbors();
 			checkNeighbors();
@@ -114,8 +130,11 @@ public class Actor {
 		}
 	}
 	
+	/**
+	    * @return true if valid move
+	*/
 	public boolean moveLeft(){
-		if(left != null && known_map[left.x][left.y]){ //check down
+		if(left != null && known_map[left.x][left.y].isOpen()){ //check down
 			cur_loc.setLocation(left.x, left.y);
 			setNeighbors();
 			checkNeighbors();
@@ -126,8 +145,13 @@ public class Actor {
 		}
 	}
 	
+	/**
+	    * Move actor to a point in one step, if possible
+	    * @param pt The potential new location
+	    * @return true if valid movement and false if otherwise
+	*/
 	public boolean goTo(Point pt){
-		if(pt.equals(above) || pt.equals(above) || pt.equals(left) || pt.equals(right)){
+		if(pt.equals(above) || pt.equals(below) || pt.equals(left) || pt.equals(right)){
 			cur_loc.setLocation(pt);
 			setNeighbors();
 			checkNeighbors();
@@ -138,6 +162,10 @@ public class Actor {
 		}
 	}
 	
+	/**
+	    * Moves the Actor 1 step along the path in queue
+	    * @return true if goal is reached
+	*/
 	public boolean step(){
 		goTo(queue.remove());
 		if(cur_loc.equals(goal)){
@@ -148,6 +176,10 @@ public class Actor {
 		}
 	}
 	
+	/**
+	    * Tries to moves the Actor in a random direction
+	    * @return true if goal is reached
+	*/
 	public boolean drunkStep(){
 		Random random = new Random();
 		
@@ -180,6 +212,10 @@ public class Actor {
 		}
 	}
 	
+	/**
+	    * Moves the Actor in a random valid direction
+	    * @return true if goal is reached
+	*/
 	public boolean dumbStep(){
 		Random random = new Random();
 		Boolean validStep = false;
@@ -226,6 +262,56 @@ public class Actor {
 	
 	
 	public String toString(){
-		return Field.arrayToString(known_map, cur_loc, start, goal);
+		return arrayToString(known_map, cur_loc, start, goal);
+	}
+	
+	public static String arrayToString(MapCell[][] arr, Point obj, Point start, Point finish){
+		String retval;
+
+		//Top
+		retval = "+";
+		for(int i = 0; i < arr.length; i++){
+			retval += "----";
+		}
+		retval += "+Y\n";
+		
+		for(int y = arr[0].length - 1; y >= 0; y--){
+			retval += "|";
+			for(int x = 0; x < arr.length; x++){
+				if(x == obj.x && y == obj.y){
+					retval += " X .";
+				}
+				else if(x == start.x && y == start.y){
+					retval += "> <.";
+				}
+				else if(x == finish.x && y == finish.y){
+					retval += "< >.";
+				}
+				else if(arr[x][y].isOpen()){
+					retval += "   .";
+				}
+				else{
+					retval += "||||";
+				}
+			}
+			retval += "|" + y + "\n";
+		}
+		
+		retval += "+";
+		for(int i = 0; i < arr.length; i++){
+			retval += "----";
+		}
+		retval += "+\n";
+		
+		retval += " ";
+		for(int i = 0; i < arr.length; i++){
+			char[] chars = new char[4 - String.valueOf(i).length()];
+			Arrays.fill(chars, ' ');
+			
+			retval += i + new String(chars);
+		}
+		retval += "X\n";
+		
+		return retval;
 	}
 }
