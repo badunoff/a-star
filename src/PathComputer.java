@@ -1,10 +1,12 @@
 import java.awt.Point;
 import java.lang.reflect.Array;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Stack;
 
 public class PathComputer {
 	
-	public Stack<Point> ComputePath(MapCell[][] map, Point start, Point end, int counter)
+	public Stack<Point> ComputePathForward(MapCell[][] map, Point start, Point end, int counter)
 	{
 		BinaryHeap<MapCell> openList = new BinaryHeap<MapCell>();
 		map[start.x][start.y].setG(0);
@@ -99,5 +101,102 @@ public class PathComputer {
 			stack.push(curr);
 		}
 		return stack;
+	}
+	
+	public Queue<Point> ComputePathBackwards(MapCell[][] map, Point end, Point start, int counter)
+	{
+		BinaryHeap<MapCell> openList = new BinaryHeap<MapCell>();
+		map[end.x][end.y].setG(0);
+		map[end.x][end.y].setSearch(counter);
+		map[start.x][start.y].setG(Integer.MAX_VALUE);
+		map[start.x][start.y].setSearch(counter);
+		MapCell current = map[end.x][end.y];
+		current.setH(Math.abs(end.x - start.x)+Math.abs(end.y - start.y));
+		while(map[start.x][start.y].getG() > (current.getG() + current.getH()))
+		{
+			int currX = current.getLocation().x;
+			int currY = current.getLocation().y;
+			if(currX > 1 && map[currX-1][currY].isOpen()) //left
+			{
+				if(map[currX-1][currY].getSearch() < counter)
+				{
+					map[currX-1][currY].setSearch(counter);
+					map[currX-1][currY].setG(Integer.MAX_VALUE);
+					map[currX-1][currY].setH(Math.abs(map[currX-1][currY].getLocation().x - start.x)+Math.abs(map[currX-1][currY].getLocation().y - start.y));
+				}
+				if(map[currX-1][currY].getG() > (current.getG()+1))
+				{
+					map[currX-1][currY].setG(current.getG()+1);
+					map[currX-1][currY].setCameFrom(current.getLocation());
+					//if it's in the open list, remove it (ADD HERE)
+					openList.push(map[currX-1][currY]);
+				}
+			}
+				
+			if(currY < Array.getLength(map) - 2 && map[currX][currY+1].isOpen()) //up
+			{
+				if(map[currX-1][currY].getSearch() < counter)
+				{
+					map[currX][currY+1].setSearch(counter);
+					map[currX][currY+1].setG(Integer.MAX_VALUE);
+					map[currX][currY+1].setH(Math.abs(map[currX][currY+1].getLocation().x - start.x)+Math.abs(map[currX][currY+1].getLocation().y - start.y));
+				}
+				if(map[currX][currY+1].getG() > (current.getG()+1))
+				{
+					map[currX][currY+1].setG(current.getG()+1);
+					map[currX][currY+1].setCameFrom(current.getLocation());
+					//if it's in the open list, remove it (ADD HERE)
+					openList.push(map[currX][currY+1]);
+				}
+			}
+				
+			if(currX < Array.getLength(map) - 2 && map[currX+1][currY].isOpen()) //right
+			{
+				if(map[currX+1][currY].getSearch() < counter)
+				{
+					map[currX+1][currY].setSearch(counter);
+					map[currX+1][currY].setG(Integer.MAX_VALUE);
+					map[currX+1][currY].setH(Math.abs(map[currX+1][currY].getLocation().x - start.x)+Math.abs(map[currX+1][currY].getLocation().y - start.y));
+				}
+				if(map[currX+1][currY].getG() > (current.getG()+1))
+				{
+					map[currX+1][currY].setG(current.getG()+1);
+					map[currX+1][currY].setCameFrom(current.getLocation());
+					//if it's in the open list, remove it (ADD HERE)
+					openList.push(map[currX+1][currY]);
+				}
+			}
+				
+			if(currY > 1 && map[currX][currY-1].isOpen()) //down
+			{
+				if(map[currX][currY-1].getSearch() < counter)
+				{
+					map[currX][currY-1].setSearch(counter);
+					map[currX][currY-1].setG(Integer.MAX_VALUE);
+					map[currX][currY-1].setH(Math.abs(map[currX][currY-1].getLocation().x - start.x)+Math.abs(map[currX][currY-1].getLocation().y - start.y));
+				}
+				if(map[currX][currY-1].getG() > (current.getG()+1))
+				{
+					map[currX][currY-1].setG(current.getG()+1);
+					map[currX][currY-1].setCameFrom(current.getLocation());
+					//if it's in the open list, remove it (ADD HERE)
+					openList.push(map[currX][currY-1]);
+				}
+			}
+			current = openList.pop();
+		}
+		if(openList.size() == 0)
+			return null;
+		Queue<Point> queue = new LinkedList<Point>();
+		current = map[start.x][start.y];
+		Point curr = new Point(start.x, start.y);
+		queue.add(curr);
+		while(current.getLocation() != map[end.x][end.y].getLocation())
+		{
+			current = map[current.getCameFrom().x][current.getCameFrom().y];
+			curr = new Point(current.getLocation().x, current.getLocation().y);
+			queue.add(curr);
+		}
+		return queue;
 	}
 }
