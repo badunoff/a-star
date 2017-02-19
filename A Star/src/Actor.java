@@ -55,29 +55,39 @@ public class Actor {
 	/**
 	    * sets coordinates of neighbors and null if they are out of bounds.
 	*/
-	private void setNeighbors(){
-		if(cur_loc.x >= 0 && cur_loc.x < known_map.length && cur_loc.y + 1 >= 0 && cur_loc.y + 1 < known_map[0].length){ //check up
-			above = new Point(cur_loc.x, cur_loc.y + 1); 
-		}
-		else{
-			above = null;
-		}
+	private void setNeighbors()
+	{
+		if( cur_loc.x >= 0
+		 && cur_loc.x < known_map.length
+		 && cur_loc.y + 1 >= 0
+		 && cur_loc.y + 1 < known_map[0].length) //check up
+			  above = new Point(cur_loc.x, cur_loc.y + 1); 
+		else  above = null;
 		
-		if(cur_loc.x >= 0 && cur_loc.x < known_map.length && cur_loc.y - 1 >= 0 && cur_loc.y - 1 < known_map[0].length){ //check down
+		if( cur_loc.x >= 0 
+		 && cur_loc.x < known_map.length
+		 && cur_loc.y - 1 >= 0
+		 && cur_loc.y - 1 < known_map[0].length){ //check down
 			below = new Point(cur_loc.x, cur_loc.y - 1); 
 		}
 		else{
 			below = null;
 		}
 		
-		if(cur_loc.x - 1 >= 0 && cur_loc.x - 1 < known_map.length && cur_loc.y >= 0 && cur_loc.y < known_map[0].length){ //check left
+		if( cur_loc.x - 1 >= 0
+		 && cur_loc.x - 1 < known_map.length 
+		 && cur_loc.y >= 0
+		 && cur_loc.y < known_map[0].length){ //check left
 			left = new Point(cur_loc.x - 1, cur_loc.y); 
 		}
 		else{
 			left = null;
 		}
 		
-		if(cur_loc.x + 1 >= 0 && cur_loc.x + 1 < known_map.length && cur_loc.y >= 0 && cur_loc.y < known_map[0].length){ //check right
+		if( cur_loc.x + 1 >= 0
+		 && cur_loc.x + 1 < known_map.length
+		 && cur_loc.y >= 0
+		 && cur_loc.y < known_map[0].length){ //check right
 			right =  new Point(cur_loc.x + 1, cur_loc.y);
 		}
 		else{
