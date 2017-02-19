@@ -12,7 +12,7 @@ public class Plan {
 	}
 	
 	public Point remove(){
-		switch(type){
+		switch(type){ 
 			case QUEUE:
 				return list.removeFirst();
 			case STACK:
