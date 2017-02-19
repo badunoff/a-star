@@ -1,9 +1,10 @@
 import java.awt.Point;
 import java.lang.reflect.Array;
+import java.util.Stack;
 
 public class PathComputer {
 	
-	public StepNode ComputePath(MapCell[][] map, Point start, Point end, int counter)
+	public Stack<Point> ComputePath(MapCell[][] map, Point start, Point end, int counter)
 	{
 		BinaryHeap<MapCell> openList = new BinaryHeap<MapCell>();
 		map[start.x][start.y].setG(0);
@@ -87,15 +88,16 @@ public class PathComputer {
 		}
 		if(openList.size() == 0)
 			return null;
-		StepNode prev = new StepNode(map[end.x][end.y].getLocation(), null);
-		StepNode curr = null;
+		Stack<Point> stack = new Stack<Point>();
 		current = map[end.x][end.y];
-		while(curr.Location != map[start.x][start.y].getLocation())
+		Point curr = new Point(end.x, end.y);
+		stack.push(curr);
+		while(current.getLocation() != map[start.x][start.y].getLocation())
 		{
-			curr = new StepNode(current.getCameFrom(), prev);
-			prev = curr;
 			current = map[current.getCameFrom().x][current.getCameFrom().y];
+			curr = new Point(current.getLocation().x, current.getLocation().y);
+			stack.push(curr);
 		}
-		return curr;
+		return stack;
 	}
 }
