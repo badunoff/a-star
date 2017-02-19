@@ -66,7 +66,7 @@ public class MapCell implements Comparable<MapCell>{
 		return search;
 	}
 	
-	public void setSearch(int search){
+	public void setSearch(int search){ 
 		this.search = search;
 	}
 	

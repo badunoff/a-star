@@ -10,4 +10,4 @@ public class StepNode {
 		Location = pt;
 		this.next = next;
 	}
-}
+} 

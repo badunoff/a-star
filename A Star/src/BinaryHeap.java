@@ -69,7 +69,7 @@ public class BinaryHeap<T extends Comparable<T>>{
 			index1 += index2;
 			index2 = index1 - index2;
 			index1 -= index2;
-		}
+		} 
 		
 		T temp = heap.get(index1);
 		heap.add(index2, temp); //add the shifting down node in the former place of max child

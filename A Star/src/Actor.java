@@ -7,7 +7,7 @@ import java.util.Random;
 public class Actor {
 	Point cur_loc;
 	Point start;
-	Point goal;
+	Point goal; 
 	Field field;
 	
 	MapCell[][] known_map;

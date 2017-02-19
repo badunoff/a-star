@@ -5,7 +5,7 @@ public class Driver {
 	public static final int DIMX = 20;
 	public static final int DIMY = 20;
 	
-	public static void main(String[] args){
+	public static void main(String[] args){ 
 		
 		
 		Field field = new Field(DIMX, DIMY);

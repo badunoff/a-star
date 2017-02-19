@@ -10,7 +10,7 @@ public class PathComputer {
 		map[start.x][start.y].setSearch(counter);
 		map[end.x][end.y].setG(Integer.MAX_VALUE);
 		map[end.x][end.y].setSearch(counter);
-		MapCell current = map[start.x][start.y];
+		MapCell current = map[start.x][start.y]; 
 		current.setH(Math.abs(start.x - end.x)+Math.abs(start.y - end.y));
 		while(map[end.x][end.y].getG() > (current.getG() + current.getH()))
 		{
