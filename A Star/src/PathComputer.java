@@ -1,16 +1,53 @@
 import java.awt.Point;
 import java.lang.reflect.Array;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Stack;
 
 public class PathComputer {
 	
-	public StepNode ComputePath(MapCell[][] map, Point start, Point end, int counter)
+	public Stack<Point> ComputePathForward(MapCell[][] map, Point start, Point end, int counter)
+	{
+		if(!Compute(map, start, end, counter))
+			return null;
+		Stack<Point> stack = new Stack<Point>();
+		MapCell current = map[end.x][end.y];
+		Point curr = new Point(end.x, end.y);
+		stack.push(curr);
+		while(current.getLocation() != map[start.x][start.y].getLocation())
+		{
+			current = map[current.getCameFrom().x][current.getCameFrom().y];
+			curr = new Point(current.getLocation().x, current.getLocation().y);
+			stack.push(curr);
+		}
+		return stack;
+	}
+	
+	public Queue<Point> ComputePathBackwards(MapCell[][] map, Point end, Point start, int counter)
+	{
+		if(!Compute(map, start, end, counter))
+			return null;;
+		Queue<Point> queue = new LinkedList<Point>();
+		MapCell current = map[start.x][start.y];
+		Point curr = new Point(start.x, start.y);
+		queue.add(curr);
+		while(current.getLocation() != map[end.x][end.y].getLocation())
+		{
+			current = map[current.getCameFrom().x][current.getCameFrom().y];
+			curr = new Point(current.getLocation().x, current.getLocation().y);
+			queue.add(curr);
+		}
+		return queue;
+	}
+	
+	public boolean Compute(MapCell[][] map, Point start, Point end, int counter)
 	{
 		BinaryHeap<MapCell> openList = new BinaryHeap<MapCell>();
 		map[start.x][start.y].setG(0);
 		map[start.x][start.y].setSearch(counter);
 		map[end.x][end.y].setG(Integer.MAX_VALUE);
 		map[end.x][end.y].setSearch(counter);
-		MapCell current = map[start.x][start.y]; 
+		MapCell current = map[start.x][start.y];
 		current.setH(Math.abs(start.x - end.x)+Math.abs(start.y - end.y));
 		while(map[end.x][end.y].getG() > (current.getG() + current.getH()))
 		{
@@ -86,16 +123,7 @@ public class PathComputer {
 			current = openList.pop();
 		}
 		if(openList.size() == 0)
-			return null;
-		StepNode prev = new StepNode(map[end.x][end.y].getLocation(), null);
-		StepNode curr = null;
-		current = map[end.x][end.y];
-		while(curr.Location != map[start.x][start.y].getLocation())
-		{
-			curr = new StepNode(current.getCameFrom(), prev);
-			prev = curr;
-			current = map[current.getCameFrom().x][current.getCameFrom().y];
-		}
-		return curr;
+			return false;
+		return true;
 	}
 }
