@@ -1,17 +1,18 @@
 import java.awt.Point;
 import java.util.Arrays;
-import java.util.Queue;
 import java.util.Random;
 
 
 public class Actor {
 	Point cur_loc;
 	Point start;
-	Point goal;
+	Point goal; 
 	Field field;
 	
+	int counter = 0;
+	
 	MapCell[][] known_map;
-	Queue<Point> queue;
+	Plan plan;
 	Point above, below, left, right;
 	
 	public Actor(Field field, int mapx, int mapy, Point start, Point finish){
@@ -25,7 +26,7 @@ public class Actor {
 		for (int x = 0; x < mapx; x++)
 			for (int y = 0; y < mapy; y++)
 				 this.known_map[x][y] = new MapCell(new Point(x,y));
-		this.queue = null;
+		this.plan = null;
 		
 		setNeighbors();
 		checkNeighbors();
@@ -55,29 +56,39 @@ public class Actor {
 	/**
 	    * sets coordinates of neighbors and null if they are out of bounds.
 	*/
-	private void setNeighbors(){
-		if(cur_loc.x >= 0 && cur_loc.x < known_map.length && cur_loc.y + 1 >= 0 && cur_loc.y + 1 < known_map[0].length){ //check up
-			above = new Point(cur_loc.x, cur_loc.y + 1); 
-		}
-		else{
-			above = null;
-		}
+	private void setNeighbors()
+	{
+		if( cur_loc.x >= 0
+		 && cur_loc.x < known_map.length
+		 && cur_loc.y + 1 >= 0
+		 && cur_loc.y + 1 < known_map[0].length) //check up
+			  above = new Point(cur_loc.x, cur_loc.y + 1); 
+		else  above = null;
 		
-		if(cur_loc.x >= 0 && cur_loc.x < known_map.length && cur_loc.y - 1 >= 0 && cur_loc.y - 1 < known_map[0].length){ //check down
+		if( cur_loc.x >= 0 
+		 && cur_loc.x < known_map.length
+		 && cur_loc.y - 1 >= 0
+		 && cur_loc.y - 1 < known_map[0].length){ //check down
 			below = new Point(cur_loc.x, cur_loc.y - 1); 
 		}
 		else{
 			below = null;
 		}
 		
-		if(cur_loc.x - 1 >= 0 && cur_loc.x - 1 < known_map.length && cur_loc.y >= 0 && cur_loc.y < known_map[0].length){ //check left
+		if( cur_loc.x - 1 >= 0
+		 && cur_loc.x - 1 < known_map.length 
+		 && cur_loc.y >= 0
+		 && cur_loc.y < known_map[0].length){ //check left
 			left = new Point(cur_loc.x - 1, cur_loc.y); 
 		}
 		else{
 			left = null;
 		}
 		
-		if(cur_loc.x + 1 >= 0 && cur_loc.x + 1 < known_map.length && cur_loc.y >= 0 && cur_loc.y < known_map[0].length){ //check right
+		if( cur_loc.x + 1 >= 0
+		 && cur_loc.x + 1 < known_map.length
+		 && cur_loc.y >= 0
+		 && cur_loc.y < known_map[0].length){ //check right
 			right =  new Point(cur_loc.x + 1, cur_loc.y);
 		}
 		else{
@@ -167,7 +178,17 @@ public class Actor {
 	    * @return true if goal is reached
 	*/
 	public boolean step(){
-		goTo(queue.remove());
+		if(counter==0)
+		{
+			counter++;
+			plan = PathComputer.ComputePathForward(known_map, start, goal, counter);
+		}
+		if(!goTo(plan.remove()))
+		{
+			counter++;
+			plan = PathComputer.ComputePathForward(known_map, start, goal, counter);
+			goTo(plan.remove());
+		}
 		if(cur_loc.equals(goal)){
 			return true;
 		}

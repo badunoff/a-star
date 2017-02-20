@@ -1,46 +1,48 @@
 import java.awt.Point;
 import java.lang.reflect.Array;
 import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
 
 public class PathComputer {
 	
-	public Stack<Point> ComputePathForward(MapCell[][] map, Point start, Point end, int counter)
+	public static Plan ComputePathForward(MapCell[][] map, Point start, Point end, int counter)
 	{
 		if(!Compute(map, start, end, counter))
 			return null;
-		Stack<Point> stack = new Stack<Point>();
+		LinkedList<Point> list = new LinkedList<Point>();
 		MapCell current = map[end.x][end.y];
 		Point curr = new Point(end.x, end.y);
-		stack.push(curr);
-		while(current.getLocation() != map[start.x][start.y].getLocation())
+		list.add(curr);
+		System.out.println("X coord: " + end.x + "\n Y coord: " + end.y);
+		while(current.getCameFrom() != map[start.x][start.y].getLocation())
 		{
 			current = map[current.getCameFrom().x][current.getCameFrom().y];
 			curr = new Point(current.getLocation().x, current.getLocation().y);
-			stack.push(curr);
+			list.add(curr);
+			System.out.println("X coord: " + curr.x + "\n Y coord: " + curr.y);
 		}
-		return stack;
+		Plan plan = new Plan(list, PlanType.STACK);
+		return plan;
 	}
 	
-	public Queue<Point> ComputePathBackwards(MapCell[][] map, Point end, Point start, int counter)
+	public Plan ComputePathBackwards(MapCell[][] map, Point end, Point start, int counter)
 	{
 		if(!Compute(map, start, end, counter))
 			return null;;
-		Queue<Point> queue = new LinkedList<Point>();
+		LinkedList<Point> list = new LinkedList<Point>();
 		MapCell current = map[start.x][start.y];
 		Point curr = new Point(start.x, start.y);
-		queue.add(curr);
-		while(current.getLocation() != map[end.x][end.y].getLocation())
+		list.add(curr);
+		while(current.getCameFrom() != map[end.x][end.y].getLocation())
 		{
 			current = map[current.getCameFrom().x][current.getCameFrom().y];
 			curr = new Point(current.getLocation().x, current.getLocation().y);
-			queue.add(curr);
+			list.add(curr);
 		}
-		return queue;
+		Plan plan = new Plan(list, PlanType.QUEUE);
+		return plan;
 	}
 	
-	public boolean Compute(MapCell[][] map, Point start, Point end, int counter)
+	public static boolean Compute(MapCell[][] map, Point start, Point end, int counter)
 	{
 		BinaryHeap<MapCell> openList = new BinaryHeap<MapCell>();
 		map[start.x][start.y].setG(0);
@@ -53,7 +55,7 @@ public class PathComputer {
 		{
 			int currX = current.getLocation().x;
 			int currY = current.getLocation().y;
-			if(currX > 1 && map[currX-1][currY].isOpen()) //left
+			if(currX > 0 && map[currX-1][currY].isOpen()) //left
 			{
 				if(map[currX-1][currY].getSearch() < counter)
 				{
@@ -70,9 +72,9 @@ public class PathComputer {
 				}
 			}
 				
-			if(currY < Array.getLength(map) - 2 && map[currX][currY+1].isOpen()) //up
+			if(currY < Array.getLength(map) - 1 && map[currX][currY+1].isOpen()) //up
 			{
-				if(map[currX-1][currY].getSearch() < counter)
+				if(map[currX][currY+1].getSearch() < counter)
 				{
 					map[currX][currY+1].setSearch(counter);
 					map[currX][currY+1].setG(Integer.MAX_VALUE);
@@ -87,7 +89,7 @@ public class PathComputer {
 				}
 			}
 				
-			if(currX < Array.getLength(map) - 2 && map[currX+1][currY].isOpen()) //right
+			if(currX < Array.getLength(map) - 1 && map[currX+1][currY].isOpen()) //right
 			{
 				if(map[currX+1][currY].getSearch() < counter)
 				{
@@ -104,7 +106,7 @@ public class PathComputer {
 				}
 			}
 				
-			if(currY > 1 && map[currX][currY-1].isOpen()) //down
+			if(currY > 0 && map[currX][currY-1].isOpen()) //down
 			{
 				if(map[currX][currY-1].getSearch() < counter)
 				{
