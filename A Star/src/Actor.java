@@ -11,7 +11,7 @@ public class Actor {
 	Field field;
 	
 	MapCell[][] known_map;
-	Queue<Point> queue;
+	Plan plan;
 	Point above, below, left, right;
 	
 	public Actor(Field field, int mapx, int mapy, Point start, Point finish){
@@ -25,7 +25,7 @@ public class Actor {
 		for (int x = 0; x < mapx; x++)
 			for (int y = 0; y < mapy; y++)
 				 this.known_map[x][y] = new MapCell(new Point(x,y));
-		this.queue = null;
+		this.plan = null;
 		
 		setNeighbors();
 		checkNeighbors();
@@ -177,7 +177,7 @@ public class Actor {
 	    * @return true if goal is reached
 	*/
 	public boolean step(){
-		goTo(queue.remove());
+		goTo(plan.remove());
 		if(cur_loc.equals(goal)){
 			return true;
 		}
