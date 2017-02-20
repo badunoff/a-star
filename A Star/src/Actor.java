@@ -10,6 +10,8 @@ public class Actor {
 	Point goal; 
 	Field field;
 	
+	int counter = 1;
+	
 	MapCell[][] known_map;
 	Plan plan;
 	Point above, below, left, right;
@@ -177,7 +179,12 @@ public class Actor {
 	    * @return true if goal is reached
 	*/
 	public boolean step(){
-		goTo(plan.remove());
+		if(!goTo(plan.remove()))
+		{
+			counter++;
+			plan = ComputePathForward(known_map, start, end, counter);
+			goTo(plan.remove);
+		}
 		if(cur_loc.equals(goal)){
 			return true;
 		}

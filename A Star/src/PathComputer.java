@@ -6,38 +6,40 @@ import java.util.Stack;
 
 public class PathComputer {
 	
-	public Stack<Point> ComputePathForward(MapCell[][] map, Point start, Point end, int counter)
+	public Plan ComputePathForward(MapCell[][] map, Point start, Point end, int counter)
 	{
 		if(!Compute(map, start, end, counter))
 			return null;
-		Stack<Point> stack = new Stack<Point>();
+		LinkedList<Point> list = new LinkedList<Point>;
 		MapCell current = map[end.x][end.y];
 		Point curr = new Point(end.x, end.y);
-		stack.push(curr);
-		while(current.getLocation() != map[start.x][start.y].getLocation())
+		list.add(curr);
+		while(current.getCameFrom() != map[start.x][start.y].getLocation())
 		{
 			current = map[current.getCameFrom().x][current.getCameFrom().y];
 			curr = new Point(current.getLocation().x, current.getLocation().y);
-			stack.push(curr);
+			list.add(curr);
 		}
-		return stack;
+		Plan plan = new Plan(list, STACK);
+		return plan;
 	}
 	
-	public Queue<Point> ComputePathBackwards(MapCell[][] map, Point end, Point start, int counter)
+	public Plan ComputePathBackwards(MapCell[][] map, Point end, Point start, int counter)
 	{
 		if(!Compute(map, start, end, counter))
 			return null;;
-		Queue<Point> queue = new LinkedList<Point>();
+		LinkedList<Point> queue = new LinkedList<Point>();
 		MapCell current = map[start.x][start.y];
 		Point curr = new Point(start.x, start.y);
-		queue.add(curr);
-		while(current.getLocation() != map[end.x][end.y].getLocation())
+		list.add(curr);
+		while(current.getCameFrom() != map[end.x][end.y].getLocation())
 		{
 			current = map[current.getCameFrom().x][current.getCameFrom().y];
 			curr = new Point(current.getLocation().x, current.getLocation().y);
-			queue.add(curr);
+			list.add(curr);
 		}
-		return queue;
+		Plan plan = new Plan(list, QUEUE);
+		return plan;
 	}
 	
 	public boolean Compute(MapCell[][] map, Point start, Point end, int counter)
