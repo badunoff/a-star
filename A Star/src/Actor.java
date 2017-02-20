@@ -1,6 +1,5 @@
 import java.awt.Point;
 import java.util.Arrays;
-import java.util.Queue;
 import java.util.Random;
 
 
@@ -10,7 +9,7 @@ public class Actor {
 	Point goal; 
 	Field field;
 	
-	int counter = 1;
+	int counter = 0;
 	
 	MapCell[][] known_map;
 	Plan plan;
@@ -179,11 +178,16 @@ public class Actor {
 	    * @return true if goal is reached
 	*/
 	public boolean step(){
+		if(counter==0)
+		{
+			counter++;
+			plan = PathComputer.ComputePathForward(known_map, start, goal, counter);
+		}
 		if(!goTo(plan.remove()))
 		{
 			counter++;
-			plan = ComputePathForward(known_map, start, end, counter);
-			goTo(plan.remove);
+			plan = PathComputer.ComputePathForward(known_map, start, goal, counter);
+			goTo(plan.remove());
 		}
 		if(cur_loc.equals(goal)){
 			return true;

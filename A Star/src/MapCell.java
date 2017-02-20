@@ -77,11 +77,11 @@ public class MapCell implements Comparable<MapCell>{
 		int otherH = ((MapCell)other).getH();
 		int otherG = ((MapCell)other).getG();
 		if((this.h + this.g) > (otherH + otherG))
-			return 1;
-		if((this.h + this.g) < (otherH + otherG))
 			return -1;
-		if(this.g > otherG)
+		if((this.h + this.g) < (otherH + otherG))
 			return 1;
-		return -1;
+		if(this.g > otherG)
+			return -1;
+		return 1;
 	}
 }
