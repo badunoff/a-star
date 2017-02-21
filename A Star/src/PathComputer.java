@@ -28,9 +28,10 @@ public class PathComputer {
 			return null;
 		LinkedList<Point> list = new LinkedList<Point>();
 		MapCell current = map[start.x][start.y];
-		Point curr = new Point(start.x, start.y);
+		current = map[current.getCameFrom().x][current.getCameFrom().y];
+		Point curr = new Point(current.getLocation().x, current.getLocation().y);
 		list.add(curr);
-		while(current.getCameFrom() != map[end.x][end.y].getLocation())
+		while(current.getLocation() != map[end.x][end.y].getLocation())
 		{
 			current = map[current.getCameFrom().x][current.getCameFrom().y];
 			curr = new Point(current.getLocation().x, current.getLocation().y);
