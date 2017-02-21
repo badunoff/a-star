@@ -147,7 +147,7 @@ public class Field {
 		return retval;
 	}
 	
-	public static String arrayToString(boolean[][] arr, Point obj){
+	public static String arrayToString(boolean[][] arr, Point start, Point finish){
 		String retval;
 		
 		//Top
@@ -160,8 +160,11 @@ public class Field {
 		for(int y = arr[0].length - 1; y >= 0; y--){
 			retval += "|";
 			for(int x = 0; x < arr.length; x++){
-				if(x == obj.x && y == obj.y){
-					retval += " X .";
+				if(x == start.x && y == start.y){
+					retval += "> <.";
+				}
+				else if(x == finish.x && y == finish.y){
+					retval += "< >.";
 				}
 				else if(arr[x][y]){
 					retval += "   .";

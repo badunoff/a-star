@@ -12,19 +12,17 @@ public class PathComputer {
 		MapCell current = map[end.x][end.y];
 		Point curr = new Point(end.x, end.y);
 		list.add(curr);
-		System.out.println("X coord: " + end.x + "\n Y coord: " + end.y);
 		while(current.getCameFrom() != map[start.x][start.y].getLocation())
 		{
 			current = map[current.getCameFrom().x][current.getCameFrom().y];
 			curr = new Point(current.getLocation().x, current.getLocation().y);
 			list.add(curr);
-			System.out.println("X coord: " + curr.x + "\n Y coord: " + curr.y);
 		}
 		Plan plan = new Plan(list, PlanType.STACK);
 		return plan;
 	}
 	
-	public Plan ComputePathBackwards(MapCell[][] map, Point end, Point start, int counter)
+	public static Plan ComputePathBackwards(MapCell[][] map, Point end, Point start, int counter)
 	{
 		if(!Compute(map, start, end, counter))
 			return null;;
@@ -123,6 +121,10 @@ public class PathComputer {
 				}
 			}
 			current = openList.pop();
+			if(current == null){
+				return false;
+			}
+			
 		}
 		if(openList.size() == 0)
 			return false;

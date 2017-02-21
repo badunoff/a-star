@@ -1,6 +1,7 @@
 import java.awt.Point;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.Scanner;
 
 
 public class Actor {
@@ -13,7 +14,7 @@ public class Actor {
 	
 	MapCell[][] known_map;
 	Plan plan;
-	Point above, below, left, right;
+	MapCell above, below, left, right;
 	
 	public Actor(Field field, int mapx, int mapy, Point start, Point finish){
 		this.start = (Point) start.clone();
@@ -37,19 +38,19 @@ public class Actor {
 	*/
 	private void checkNeighbors(){
 		if(above != null){ //check up
-			known_map[above.x][above.y].setOpen(field.check_loc(above)); 
+			known_map[above.getLocation().x][above.getLocation().y].setOpen(field.check_loc(above.getLocation())); 
 		}
 		
 		if(below != null){ //check down
-			known_map[below.x][below.y].setOpen(field.check_loc(below));
+			known_map[below.getLocation().x][below.getLocation().y].setOpen(field.check_loc(below.getLocation()));
 		}
 		
 		if(left != null){ //check left
-			known_map[left.x][left.y].setOpen(field.check_loc(left));
+			known_map[left.getLocation().x][left.getLocation().y].setOpen(field.check_loc(left.getLocation()));
 		}
 		
 		if(right != null){ //check right
-			known_map[right.x][right.y].setOpen(field.check_loc(right));
+			known_map[right.getLocation().x][right.getLocation().y].setOpen(field.check_loc(right.getLocation()));
 		}
 	}
 	
@@ -62,14 +63,14 @@ public class Actor {
 		 && cur_loc.x < known_map.length
 		 && cur_loc.y + 1 >= 0
 		 && cur_loc.y + 1 < known_map[0].length) //check up
-			  above = new Point(cur_loc.x, cur_loc.y + 1); 
+			  above = known_map[cur_loc.x][cur_loc.y + 1]; 
 		else  above = null;
 		
 		if( cur_loc.x >= 0 
 		 && cur_loc.x < known_map.length
 		 && cur_loc.y - 1 >= 0
 		 && cur_loc.y - 1 < known_map[0].length){ //check down
-			below = new Point(cur_loc.x, cur_loc.y - 1); 
+			below = known_map[cur_loc.x][cur_loc.y - 1]; 
 		}
 		else{
 			below = null;
@@ -79,7 +80,7 @@ public class Actor {
 		 && cur_loc.x - 1 < known_map.length 
 		 && cur_loc.y >= 0
 		 && cur_loc.y < known_map[0].length){ //check left
-			left = new Point(cur_loc.x - 1, cur_loc.y); 
+			left = known_map[cur_loc.x - 1][cur_loc.y]; 
 		}
 		else{
 			left = null;
@@ -89,19 +90,34 @@ public class Actor {
 		 && cur_loc.x + 1 < known_map.length
 		 && cur_loc.y >= 0
 		 && cur_loc.y < known_map[0].length){ //check right
-			right =  new Point(cur_loc.x + 1, cur_loc.y);
+			right =  known_map[cur_loc.x + 1][cur_loc.y];
 		}
 		else{
 			right = null;
 		}
 	}
 	
+	public boolean checkPlan(){
+		Point nextStep = plan.peekNextStep();
+		
+		if((nextStep.equals(above) && !above.isOpen())
+		 ||(nextStep.equals(below) && !below.isOpen())
+		 ||(nextStep.equals(left) && !left.isOpen())
+		 ||(nextStep.equals(right) && !right.isOpen())){
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
+	
+	
 	/**
 	    * @return true if valid move
 	*/
 	public boolean moveUp(){
-		if(above != null && known_map[above.x][above.y].isOpen()){ //check up
-			cur_loc.setLocation(above.x, above.y);
+		if(above != null && known_map[above.getLocation().x][above.getLocation().y].isOpen()){ //check up
+			cur_loc.setLocation(above.getLocation().x, above.getLocation().y);
 			setNeighbors();
 			checkNeighbors();
 			return true;
@@ -115,8 +131,8 @@ public class Actor {
 	    * @return true if valid move
 	*/
 	public boolean moveDown(){
-		if(below != null && known_map[below.x][below.y].isOpen()){ //check down
-			cur_loc.setLocation(below.x, below.y);
+		if(below != null && known_map[below.getLocation().x][below.getLocation().y].isOpen()){ //check down
+			cur_loc.setLocation(below.getLocation().x, below.getLocation().y);
 			setNeighbors();
 			checkNeighbors();
 			return true;
@@ -130,8 +146,8 @@ public class Actor {
 	    * @return true if valid move
 	*/
 	public boolean moveRight(){
-		if(right != null && known_map[right.x][right.y].isOpen()){ //check down
-			cur_loc.setLocation(right.x, right.y);
+		if(right != null && known_map[right.getLocation().x][right.getLocation().y].isOpen()){ //check down
+			cur_loc.setLocation(right.getLocation().x, right.getLocation().y);
 			setNeighbors();
 			checkNeighbors();
 			return true;
@@ -145,8 +161,8 @@ public class Actor {
 	    * @return true if valid move
 	*/
 	public boolean moveLeft(){
-		if(left != null && known_map[left.x][left.y].isOpen()){ //check down
-			cur_loc.setLocation(left.x, left.y);
+		if(left != null && known_map[left.getLocation().x][left.getLocation().y].isOpen()){ //check down
+			cur_loc.setLocation(left.getLocation().x, left.getLocation().y);
 			setNeighbors();
 			checkNeighbors();
 			return true;
@@ -162,7 +178,10 @@ public class Actor {
 	    * @return true if valid movement and false if otherwise
 	*/
 	public boolean goTo(Point pt){
-		if(pt.equals(above) || pt.equals(below) || pt.equals(left) || pt.equals(right)){
+		if( (above != null && pt.equals(above.getLocation()) && above.isOpen())
+		 || (below != null && pt.equals(below.getLocation()) && below.isOpen())
+		 || (left != null && pt.equals(left.getLocation()) && left.isOpen())
+		 || (right != null && pt.equals(right.getLocation()) && right.isOpen())){
 			cur_loc.setLocation(pt);
 			setNeighbors();
 			checkNeighbors();
@@ -176,24 +195,67 @@ public class Actor {
 	/**
 	    * Moves the Actor 1 step along the path in queue
 	    * @return true if goal is reached
+	 * @throws Exception 
 	*/
-	public boolean step(){
-		if(counter==0)
+	public StepResult step(Method method){
+		if(counter==0 && plan == null)
 		{
 			counter++;
-			plan = PathComputer.ComputePathForward(known_map, start, goal, counter);
+			switch(method){
+				case Forward:
+					plan = PathComputer.ComputePathForward(known_map, cur_loc, goal, counter);
+					break;
+				case Backward:
+					plan = PathComputer.ComputePathBackwards(known_map, cur_loc, goal, counter);
+					break;
+				case Adaptive:
+					//TODO code this
+					break;
+				default:
+					break;
+			}
+			
+			if(plan == null){
+				return StepResult.NoPath;
+			}
+			System.out.println(plan);
 		}
+		
 		if(!goTo(plan.remove()))
 		{
 			counter++;
-			plan = PathComputer.ComputePathForward(known_map, start, goal, counter);
+			
+			switch(method){
+				case Forward:
+					plan = PathComputer.ComputePathForward(known_map, cur_loc, goal, counter);
+					break;
+				case Backward:
+					plan = PathComputer.ComputePathBackwards(known_map, cur_loc, goal, counter);
+					break;
+				case Adaptive:
+					//TODO code this
+					break;
+				default:
+					break;
+			}
+			
+			if(plan == null){
+				return StepResult.NoPath;
+			}
+			
+			System.out.println(plan);
+			System.out.println("New Path:");
+			System.out.println(this);
+			promptEnterKey();
 			goTo(plan.remove());
 		}
+		
+		
 		if(cur_loc.equals(goal)){
-			return true;
+			return StepResult.Success;
 		}
 		else{
-			return false;
+			return StepResult.Step;
 		}
 	}
 	
@@ -201,7 +263,7 @@ public class Actor {
 	    * Tries to moves the Actor in a random direction
 	    * @return true if goal is reached
 	*/
-	public boolean drunkStep(){
+	public StepResult drunkStep(){
 		Random random = new Random();
 		
 		switch(random.nextInt(4)){
@@ -226,10 +288,10 @@ public class Actor {
 		}
 		
 		if(cur_loc.equals(goal)){
-			return true;
+			return StepResult.Success;
 		}
 		else{
-			return false;
+			return StepResult.Step;
 		}
 	}
 	
@@ -237,7 +299,7 @@ public class Actor {
 	    * Moves the Actor in a random valid direction
 	    * @return true if goal is reached
 	*/
-	public boolean dumbStep(){
+	public StepResult dumbStep(){
 		Random random = new Random();
 		Boolean validStep = false;
 		
@@ -273,20 +335,20 @@ public class Actor {
 		}
 		
 		if(cur_loc.equals(goal)){
-			return true;
+			return StepResult.Success;
 		}
 		else{
-			return false;
+			return StepResult.Step;
 		}
 	}
 	
 	
 	
 	public String toString(){
-		return arrayToString(known_map, cur_loc, start, goal);
+		return arrayToString(known_map, cur_loc, start, goal, plan);
 	}
 	
-	public static String arrayToString(MapCell[][] arr, Point obj, Point start, Point finish){
+	public static String arrayToString(MapCell[][] arr, Point obj, Point start, Point finish, Plan plan){
 		String retval;
 
 		//Top
@@ -299,14 +361,22 @@ public class Actor {
 		for(int y = arr[0].length - 1; y >= 0; y--){
 			retval += "|";
 			for(int x = 0; x < arr.length; x++){
-				if(x == obj.x && y == obj.y){
+				Point newPoint = new Point(x, y);
+				
+				if(newPoint.equals(obj)){
 					retval += " X .";
 				}
-				else if(x == start.x && y == start.y){
+				else if(newPoint.equals(start)){
 					retval += "> <.";
 				}
-				else if(x == finish.x && y == finish.y){
+				else if(newPoint.equals(finish)){
 					retval += "< >.";
+				}
+				else if(plan != null && plan.contains(newPoint) && !arr[x][y].isOpen()){
+					retval += "!!!!";
+				}
+				else if(plan != null && plan.contains(newPoint)){
+					retval += " x .";
 				}
 				else if(arr[x][y].isOpen()){
 					retval += "   .";
@@ -335,4 +405,10 @@ public class Actor {
 		
 		return retval;
 	}
+	
+	public static void promptEnterKey(){
+		   System.out.println("Press \"ENTER\" to continue...");
+		   Scanner scanner = new Scanner(System.in);
+		   scanner.nextLine();
+		}
 }

@@ -21,4 +21,40 @@ public class Plan {
 				return null;
 		}
 	}
+	
+	public Point peekNextStep(){
+		switch(type){ 
+			case QUEUE:
+				return list.peekFirst();
+			case STACK:
+				return list.peekLast();
+			default:
+				return null;
+		}
+	}
+	
+	
+	public String toString(){
+		String retval = "";
+		switch(type){ 
+			case QUEUE:
+				for(int i = 0; i < list.size(); i++){
+					retval += "Step " + (i + 1) + ": x = " + list.get(i).x + ", y = " + list.get(i).y + "\n";
+				}
+				break;
+			case STACK:
+				for(int i = list.size() - 1; i >= 0; i--){
+					retval += "Step " + (list.size() - i) + ": x = " + list.get(i).x + ", y = " + list.get(i).y + "\n";
+				}
+				break;
+			default:
+				
+		}
+		
+		return retval;
+	}
+	
+	public boolean contains(Point point){
+		return list.contains(point);
+	}
 }

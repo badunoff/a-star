@@ -29,6 +29,9 @@ public class BinaryHeap<T extends Comparable<T>>{
 		if(heap.isEmpty()){
 			return null;
 		}
+		else if(heap.size() == 1){
+			return heap.remove(0);
+		}
 		
 		T retval = heap.remove(0);
 		

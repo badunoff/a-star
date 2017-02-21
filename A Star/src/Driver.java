@@ -16,29 +16,44 @@ public class Driver {
 		
 		System.out.println(start);
 		System.out.println(finish);
-		System.out.println(Field.arrayToString(field.field));
+		System.out.println(Field.arrayToString(field.field, start, finish));
 		
 		
 		Actor actor = new Actor(field, DIMX, DIMY, start, finish);
+		
+		System.out.println(actor);
 		
 		promptEnterKey();
 		
 		for(int i = 1; i < 10000; i++ ){
 			System.out.println(i);
-			boolean success = actor.step();
-			System.out.println(actor);
-			
-			if(success){
-				System.out.println("Success!");
-				break;
+			StepResult step;
+			try {
+				step = actor.step(Method.Backward);
+				System.out.println(actor);
+				
+				switch(step){
+					case Success:
+						System.out.println("Success!");
+						return;
+					case NoPath:
+						System.out.println("No Path Found");
+						return;
+					default:
+						break;
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			
-			try {
+			
+			/*try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-			}
-			//promptEnterKey();
+			}*/
+			promptEnterKey();
 		}
 		
 	}
@@ -47,6 +62,5 @@ public class Driver {
 		   System.out.println("Press \"ENTER\" to continue...");
 		   Scanner scanner = new Scanner(System.in);
 		   scanner.nextLine();
-		   scanner.close();
 		}
 }
