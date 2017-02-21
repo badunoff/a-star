@@ -6,7 +6,7 @@ public class PathComputer {
 	
 	public static Plan ComputePathForward(MapCell[][] map, Point start, Point end, int counter)
 	{
-		if(!Compute(map, start, end, counter))
+		if(!Compute(map, start, end, counter, null))
 			return null;
 		LinkedList<Point> list = new LinkedList<Point>();
 		MapCell current = map[end.x][end.y];
@@ -24,7 +24,7 @@ public class PathComputer {
 	
 	public static Plan ComputePathBackwards(MapCell[][] map, Point start, Point end, int counter)
 	{
-		if(!Compute(map, end, start, counter))
+		if(!Compute(map, end, start, counter, null))
 			return null;
 		LinkedList<Point> list = new LinkedList<Point>();
 		MapCell current = map[start.x][start.y];
@@ -40,8 +40,34 @@ public class PathComputer {
 		Plan plan = new Plan(list, PlanType.QUEUE);
 		return plan;
 	}
+
+	public static Plan ComputePathAdaptive(MapCell[][] map, Point start, Point end, int counter)
+	{
+		LinkedList<MapCell> closed = new LinkedList<MapCell>();
+		if(!Compute(map, start, end, counter, closed))
+			return null;
+		int gd = map[end.x][end.y].getG();
+		MapCell cur;// = closed.removeLast();
+		while(closed.size() > 0)
+		{
+			cur = closed.removeLast();
+			cur.setH(gd - cur.getG());
+		}
+		LinkedList<Point> list = new LinkedList<Point>();
+		MapCell current = map[end.x][end.y];
+		Point curr = new Point(end.x, end.y);
+		list.add(curr);
+		while(current.getCameFrom() != map[start.x][start.y].getLocation())
+		{
+			current = map[current.getCameFrom().x][current.getCameFrom().y];
+			curr = new Point(current.getLocation().x, current.getLocation().y);
+			list.add(curr);
+		}
+		Plan plan = new Plan(list, PlanType.STACK);
+		return plan;
+	}
 	
-	public static boolean Compute(MapCell[][] map, Point start, Point end, int counter)
+	public static boolean Compute(MapCell[][] map, Point start, Point end, int counter, LinkedList<MapCell> closed)
 	{
 		BinaryHeap<MapCell> openList = new BinaryHeap<MapCell>();
 		map[start.x][start.y].setG(0);
@@ -60,7 +86,8 @@ public class PathComputer {
 				{
 					map[currX-1][currY].setSearch(counter);
 					map[currX-1][currY].setG(Integer.MAX_VALUE);
-					map[currX-1][currY].setH(Math.abs(map[currX-1][currY].getLocation().x - end.x)+Math.abs(map[currX-1][currY].getLocation().y - end.y));
+					if(map[currX-1][currY].getH() == Integer.MAX_VALUE)
+						map[currX-1][currY].setH(Math.abs(map[currX-1][currY].getLocation().x - end.x)+Math.abs(map[currX-1][currY].getLocation().y - end.y));
 				}
 				if(map[currX-1][currY].getG() > (current.getG()+1))
 				{
@@ -77,7 +104,8 @@ public class PathComputer {
 				{
 					map[currX][currY+1].setSearch(counter);
 					map[currX][currY+1].setG(Integer.MAX_VALUE);
-					map[currX][currY+1].setH(Math.abs(map[currX][currY+1].getLocation().x - end.x)+Math.abs(map[currX][currY+1].getLocation().y - end.y));
+					if(map[currX][currY+1].getH() == Integer.MAX_VALUE)
+						map[currX][currY+1].setH(Math.abs(map[currX][currY+1].getLocation().x - end.x)+Math.abs(map[currX][currY+1].getLocation().y - end.y));
 				}
 				if(map[currX][currY+1].getG() > (current.getG()+1))
 				{
@@ -94,7 +122,8 @@ public class PathComputer {
 				{
 					map[currX+1][currY].setSearch(counter);
 					map[currX+1][currY].setG(Integer.MAX_VALUE);
-					map[currX+1][currY].setH(Math.abs(map[currX+1][currY].getLocation().x - end.x)+Math.abs(map[currX+1][currY].getLocation().y - end.y));
+					if(map[currX+1][currY].getH() == Integer.MAX_VALUE)
+						map[currX+1][currY].setH(Math.abs(map[currX+1][currY].getLocation().x - end.x)+Math.abs(map[currX+1][currY].getLocation().y - end.y));
 				}
 				if(map[currX+1][currY].getG() > (current.getG()+1))
 				{
@@ -111,7 +140,8 @@ public class PathComputer {
 				{
 					map[currX][currY-1].setSearch(counter);
 					map[currX][currY-1].setG(Integer.MAX_VALUE);
-					map[currX][currY-1].setH(Math.abs(map[currX][currY-1].getLocation().x - end.x)+Math.abs(map[currX][currY-1].getLocation().y - end.y));
+					if(map[currX][currY-1].getH() == Integer.MAX_VALUE)
+						map[currX][currY-1].setH(Math.abs(map[currX][currY-1].getLocation().x - end.x)+Math.abs(map[currX][currY-1].getLocation().y - end.y));
 				}
 				if(map[currX][currY-1].getG() > (current.getG()+1))
 				{
@@ -120,6 +150,10 @@ public class PathComputer {
 					//if it's in the open list, remove it (ADD HERE)
 					openList.push(map[currX][currY-1]);
 				}
+			}
+			if(closed != null)
+			{
+				closed.add(current);
 			}
 			current = openList.pop();
 			if(current == null){

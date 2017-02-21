@@ -13,6 +13,7 @@ public class MapCell implements Comparable<MapCell>{
 		location = pt;
 		this.open = true;
 		this.search = 0;
+		this.h = Integer.MAX_VALUE;
 		cameFrom = null;
 	}
 	

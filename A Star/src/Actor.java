@@ -209,7 +209,7 @@ public class Actor {
 					plan = PathComputer.ComputePathBackwards(known_map, cur_loc, goal, counter);
 					break;
 				case Adaptive:
-					//TODO code this
+					plan = PathComputer.ComputePathAdaptive(known_map, cur_loc, goal, counter);
 					break;
 				default:
 					break;
@@ -233,7 +233,7 @@ public class Actor {
 					plan = PathComputer.ComputePathBackwards(known_map, cur_loc, goal, counter);
 					break;
 				case Adaptive:
-					//TODO code this
+					plan = PathComputer.ComputePathAdaptive(known_map, cur_loc, goal, counter);
 					break;
 				default:
 					break;
