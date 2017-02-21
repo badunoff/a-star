@@ -22,9 +22,9 @@ public class PathComputer {
 		return plan;
 	}
 	
-	public static Plan ComputePathBackwards(MapCell[][] map, Point end, Point start, int counter)
+	public static Plan ComputePathBackwards(MapCell[][] map, Point start, Point end, int counter)
 	{
-		if(!Compute(map, start, end, counter))
+		if(!Compute(map, end, start, counter))
 			return null;
 		LinkedList<Point> list = new LinkedList<Point>();
 		MapCell current = map[start.x][start.y];

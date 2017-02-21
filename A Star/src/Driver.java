@@ -29,7 +29,7 @@ public class Driver {
 			System.out.println(i);
 			StepResult step;
 			try {
-				step = actor.step(Method.Forward);
+				step = actor.step(Method.Backward);
 				System.out.println(actor);
 				
 				switch(step){

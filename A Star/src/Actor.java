@@ -198,7 +198,7 @@ public class Actor {
 	 * @throws Exception 
 	*/
 	public StepResult step(Method method){
-		if(counter==0 && plan == null)
+		if(counter==0)
 		{
 			counter++;
 			switch(method){
