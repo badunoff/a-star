@@ -246,7 +246,12 @@ public class Actor {
 			System.out.println(plan);
 			System.out.println("New Path:");
 			System.out.println(this);
-			promptEnterKey();
+			//promptEnterKey();
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			goTo(plan.remove());
 		}
 		

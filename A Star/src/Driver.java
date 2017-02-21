@@ -9,7 +9,7 @@ public class Driver {
 		
 		
 		Field field = new Field(DIMX, DIMY);
-		field.random_percent_plain_field(70);
+		field.random_percent_plain_field(65);
 		
 		Point start = field.randomValidLocation();
 		Point finish = field.randomValidLocation(start);
@@ -29,7 +29,7 @@ public class Driver {
 			System.out.println(i);
 			StepResult step;
 			try {
-				step = actor.step(Method.Backward);
+				step = actor.step(Method.Adaptive);
 				System.out.println(actor);
 				
 				switch(step){
@@ -48,12 +48,12 @@ public class Driver {
 			}
 			
 			
-			/*try {
+			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-			}*/
-			promptEnterKey();
+			}
+			//promptEnterKey();
 		}
 		
 	}
