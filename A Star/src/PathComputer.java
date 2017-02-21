@@ -25,7 +25,7 @@ public class PathComputer {
 	public static Plan ComputePathBackwards(MapCell[][] map, Point end, Point start, int counter)
 	{
 		if(!Compute(map, start, end, counter))
-			return null;;
+			return null;
 		LinkedList<Point> list = new LinkedList<Point>();
 		MapCell current = map[start.x][start.y];
 		Point curr = new Point(start.x, start.y);
