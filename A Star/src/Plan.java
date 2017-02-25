@@ -3,12 +3,14 @@ import java.util.LinkedList;
 
 
 public class Plan {
+	private int expanded;
 	private PlanType type;
 	private LinkedList<Point> list;
 	
-	public Plan(LinkedList<Point> list, PlanType type){
+	public Plan(LinkedList<Point> list, PlanType type, int exp){
 		this.list = list;
 		this.type = type;
+		this.expanded = exp;
 	}
 	
 	public Point remove(){
@@ -20,6 +22,16 @@ public class Plan {
 			default:
 				return null;
 		}
+	}
+	
+	public int getExp()
+	{
+		return expanded;
+	}
+	
+	public void setExp(int expand)
+	{
+		this.expanded = expand;
 	}
 	
 	public Point peekNextStep(){

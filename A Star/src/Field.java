@@ -13,6 +13,11 @@ public class Field {
 		field = new boolean[x][y];
 	}
 	
+	public Field(boolean[][] field){
+		this.field = field;
+	}
+	
+	
 	public void set_random_field(){
 		Random random = new Random();
 		
@@ -91,10 +96,9 @@ public class Field {
 	}
 	
 	
-	
-	
-	
-	
+	public boolean[][] getFieldArrayCopy(){
+		return field.clone();
+	}
 	
 	
 	

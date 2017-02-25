@@ -74,7 +74,7 @@ public class MapCell implements Comparable<MapCell>{
 	public int compareTo(MapCell other) throws ClassCastException
 	{
 		if (!(other instanceof MapCell))
-		      throw new ClassCastException("A Person object expected.");
+		      throw new ClassCastException("A MapCell object expected.");
 		int otherH = ((MapCell)other).getH();
 		int otherG = ((MapCell)other).getG();
 		if((this.h + this.g) > (otherH + otherG))
@@ -82,7 +82,7 @@ public class MapCell implements Comparable<MapCell>{
 		if((this.h + this.g) < (otherH + otherG))
 			return 1;
 		if(this.g > otherG)
-			return -1;
+			return 1;
 		return 1;
 	}
 }

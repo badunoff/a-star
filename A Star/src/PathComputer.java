@@ -6,7 +6,8 @@ public class PathComputer {
 	
 	public static Plan ComputePathForward(MapCell[][] map, Point start, Point end, int counter)
 	{
-		if(!Compute(map, start, end, counter, null))
+		int exp = Compute(map, start, end, counter, null);
+		if(exp == 0)
 			return null;
 		LinkedList<Point> list = new LinkedList<Point>();
 		MapCell current = map[end.x][end.y];
@@ -18,17 +19,17 @@ public class PathComputer {
 			curr = new Point(current.getLocation().x, current.getLocation().y);
 			list.add(curr);
 		}
-		Plan plan = new Plan(list, PlanType.STACK);
+		Plan plan = new Plan(list, PlanType.STACK, exp);
 		return plan;
 	}
 	
 	public static Plan ComputePathBackwards(MapCell[][] map, Point start, Point end, int counter)
 	{
-		if(!Compute(map, end, start, counter, null))
+		int exp = Compute(map, end, start, counter, null);
+		if(exp == 0)
 			return null;
 		LinkedList<Point> list = new LinkedList<Point>();
 		MapCell current = map[start.x][start.y];
-		current = map[current.getCameFrom().x][current.getCameFrom().y];
 		Point curr = new Point(current.getLocation().x, current.getLocation().y);
 		list.add(curr);
 		while(current.getLocation() != map[end.x][end.y].getLocation())
@@ -37,14 +38,15 @@ public class PathComputer {
 			curr = new Point(current.getLocation().x, current.getLocation().y);
 			list.add(curr);
 		}
-		Plan plan = new Plan(list, PlanType.QUEUE);
+		Plan plan = new Plan(list, PlanType.QUEUE, exp);
 		return plan;
 	}
 
 	public static Plan ComputePathAdaptive(MapCell[][] map, Point start, Point end, int counter)
 	{
 		LinkedList<MapCell> closed = new LinkedList<MapCell>();
-		if(!Compute(map, start, end, counter, closed))
+		int exp = Compute(map, start, end, counter, closed);
+		if(exp == 0)
 			return null;
 		int gd = map[end.x][end.y].getG();
 		MapCell cur;// = closed.removeLast();
@@ -63,12 +65,13 @@ public class PathComputer {
 			curr = new Point(current.getLocation().x, current.getLocation().y);
 			list.add(curr);
 		}
-		Plan plan = new Plan(list, PlanType.STACK);
+		Plan plan = new Plan(list, PlanType.STACK, exp);
 		return plan;
 	}
 	
-	public static boolean Compute(MapCell[][] map, Point start, Point end, int counter, LinkedList<MapCell> closed)
+	public static int Compute(MapCell[][] map, Point start, Point end, int counter, LinkedList<MapCell> closed)
 	{
+		int expanded = 0;
 		BinaryHeap<MapCell> openList = new BinaryHeap<MapCell>();
 		map[start.x][start.y].setG(0);
 		map[start.x][start.y].setSearch(counter);
@@ -155,14 +158,15 @@ public class PathComputer {
 			{
 				closed.add(current);
 			}
+			expanded++;
 			current = openList.pop();
 			if(current == null){
-				return false;
+				return 0;
 			}
 			
 		}
 		if(openList.size() == 0)
-			return false;
-		return true;
+			return 0;
+		return expanded;
 	}
 }

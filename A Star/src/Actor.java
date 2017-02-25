@@ -10,6 +10,7 @@ public class Actor {
 	Point goal; 
 	Field field;
 	
+	int totalExpanded = 0;
 	int counter = 0;
 	
 	MapCell[][] known_map;
@@ -218,7 +219,8 @@ public class Actor {
 			if(plan == null){
 				return StepResult.NoPath;
 			}
-			System.out.println(plan);
+			totalExpanded += plan.getExp();
+			//System.out.println(plan);
 		}
 		
 		if(!goTo(plan.remove()))
@@ -243,15 +245,11 @@ public class Actor {
 				return StepResult.NoPath;
 			}
 			
-			System.out.println(plan);
+			totalExpanded += plan.getExp();
+			/*System.out.println(plan);
 			System.out.println("New Path:");
 			System.out.println(this);
-			//promptEnterKey();
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			promptEnterKey();*/
 			goTo(plan.remove());
 		}
 		
@@ -383,11 +381,8 @@ public class Actor {
 				else if(plan != null && plan.contains(newPoint)){
 					retval += " x .";
 				}
-				else if(arr[x][y].isOpen()){
-					retval += "   .";
-				}
-				else{
-					retval += "||||";
+				else {
+					retval += arr[x][y].toString();
 				}
 			}
 			retval += "|" + y + "\n";
@@ -409,6 +404,11 @@ public class Actor {
 		retval += "X\n";
 		
 		return retval;
+	}
+	
+	public void printExp()
+	{
+		System.out.println("Total expanded nodes: " + totalExpanded + "\n");
 	}
 	
 	public static void promptEnterKey(){
