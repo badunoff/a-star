@@ -89,7 +89,7 @@ public class PathComputer {
 				{
 					map[currX-1][currY].setSearch(counter);
 					map[currX-1][currY].setG(Integer.MAX_VALUE);
-					if(map[currX-1][currY].getH() == Integer.MAX_VALUE)
+					//if(map[currX-1][currY].getH() == Integer.MAX_VALUE)
 						map[currX-1][currY].setH(Math.abs(map[currX-1][currY].getLocation().x - end.x)+Math.abs(map[currX-1][currY].getLocation().y - end.y));
 				}
 				if(map[currX-1][currY].getG() > (current.getG()+1))
@@ -107,7 +107,7 @@ public class PathComputer {
 				{
 					map[currX][currY+1].setSearch(counter);
 					map[currX][currY+1].setG(Integer.MAX_VALUE);
-					if(map[currX][currY+1].getH() == Integer.MAX_VALUE)
+					//if(map[currX][currY+1].getH() == Integer.MAX_VALUE)
 						map[currX][currY+1].setH(Math.abs(map[currX][currY+1].getLocation().x - end.x)+Math.abs(map[currX][currY+1].getLocation().y - end.y));
 				}
 				if(map[currX][currY+1].getG() > (current.getG()+1))
@@ -125,7 +125,7 @@ public class PathComputer {
 				{
 					map[currX+1][currY].setSearch(counter);
 					map[currX+1][currY].setG(Integer.MAX_VALUE);
-					if(map[currX+1][currY].getH() == Integer.MAX_VALUE)
+					//if(map[currX+1][currY].getH() == Integer.MAX_VALUE)
 						map[currX+1][currY].setH(Math.abs(map[currX+1][currY].getLocation().x - end.x)+Math.abs(map[currX+1][currY].getLocation().y - end.y));
 				}
 				if(map[currX+1][currY].getG() > (current.getG()+1))
@@ -143,7 +143,7 @@ public class PathComputer {
 				{
 					map[currX][currY-1].setSearch(counter);
 					map[currX][currY-1].setG(Integer.MAX_VALUE);
-					if(map[currX][currY-1].getH() == Integer.MAX_VALUE)
+					//if(map[currX][currY-1].getH() == Integer.MAX_VALUE)
 						map[currX][currY-1].setH(Math.abs(map[currX][currY-1].getLocation().x - end.x)+Math.abs(map[currX][currY-1].getLocation().y - end.y));
 				}
 				if(map[currX][currY-1].getG() > (current.getG()+1))
