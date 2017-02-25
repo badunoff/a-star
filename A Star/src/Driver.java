@@ -2,15 +2,15 @@ import java.awt.Point;
 import java.util.Scanner;
 
 public class Driver {
-	public static final int DIMX = 20;
-	public static final int DIMY = 20;
+	public static final int DIMX = 101;
+	public static final int DIMY = 101;
 	public static final int PERCENT_OPEN = 70;
-	public static final int NUM_MAPS = 50;
+	public static final int NUM_MAPS = 150;
 	
 	public static void main(String[] args){ 
 		
-		/*generateMaps(NUM_MAPS);*/
-		/*
+		generateMaps(NUM_MAPS);
+		
 		Point start = new Point();
 		Point finish = new Point();
 		
@@ -52,9 +52,9 @@ public class Driver {
 
 		System.out.println("Adaptive Step Average: " + (adaptiveSteps/NUM_MAPS));
 		System.out.println("Adaptive Expansions Average: " + (adaptiveNodes/NUM_MAPS));
-		*/
 		
 		
+		/*
 		Point start = new Point();
 		Point finish = new Point();
 		
@@ -80,19 +80,19 @@ public class Driver {
 			StepResult step3 = StepResult.Step;
 			
 			try {
-				if(step1 != null && !step1.equals(StepResult.Success) && !step1.equals(StepResult.NoPath)){
+				if(step1 == StepResult.Step){
 					step1 = actor1.step(Method.Forward);
 					System.out.println("FORWARD: ");
 					System.out.println(actor1);
 				}
 				
-				if(step2 != null && !step2.equals(StepResult.Success) && !step2.equals(StepResult.NoPath)){
+				if(step2 == StepResult.Step){
 					step2 = actor2.step(Method.Backward);
 					System.out.println("BACKWARD: ");
 					System.out.println(actor2);
 				}
 				
-				if(step3 != null && !step3.equals(StepResult.Success) && !step3.equals(StepResult.NoPath)){
+				if(step3 == StepResult.Step){
 					step3 = actor3.step(Method.Adaptive);
 					System.out.println("ADAPTIVE: ");
 					System.out.println(actor3);
@@ -104,13 +104,13 @@ public class Driver {
 			}
 			
 			
-			/*try {
+			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-			}*/
+			}
 			promptEnterKey();
-		}
+		}*/
 		
 	}
 	
