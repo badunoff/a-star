@@ -9,7 +9,7 @@ public class Driver {
 	
 	public static void main(String[] args){ 
 		
-		generateMaps(NUM_MAPS);
+		//generateMaps(NUM_MAPS);
 		
 		Point start = new Point();
 		Point finish = new Point();
