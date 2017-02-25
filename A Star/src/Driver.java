@@ -5,7 +5,7 @@ public class Driver {
 	public static final int DIMX = 101;
 	public static final int DIMY = 101;
 	public static final int PERCENT_OPEN = 70;
-	public static final int NUM_MAPS = 150;
+	public static final int NUM_MAPS = 50;
 	
 	public static void main(String[] args){ 
 		
