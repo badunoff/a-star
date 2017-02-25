@@ -2,15 +2,15 @@ import java.awt.Point;
 import java.util.Scanner;
 
 public class Driver {
-	public static final int DIMX = 101;
-	public static final int DIMY = 101;
+	public static final int DIMX = 20;
+	public static final int DIMY = 20;
 	public static final int PERCENT_OPEN = 70;
 	public static final int NUM_MAPS = 50;
 	
 	public static void main(String[] args){ 
 		
-		generateMaps(NUM_MAPS);
-		
+		/*generateMaps(NUM_MAPS);*/
+		/*
 		Point start = new Point();
 		Point finish = new Point();
 		
@@ -52,65 +52,65 @@ public class Driver {
 
 		System.out.println("Adaptive Step Average: " + (adaptiveSteps/NUM_MAPS));
 		System.out.println("Adaptive Expansions Average: " + (adaptiveNodes/NUM_MAPS));
+		*/
 		
 		
+		Point start = new Point();
+		Point finish = new Point();
 		
-		
-		/*
-		
-		
-		
-		
-		
-		Field field = new Field(DIMX, DIMY);
-		field.random_percent_plain_field(70);
-		
-		Point start = field.randomValidLocation();
-		Point finish = field.randomValidLocation(start);
+		Field field = ReadAndWriteBoard.read("Map2", start, finish);
 		
 		System.out.println(start);
 		System.out.println(finish);
 		System.out.println(Field.arrayToString(field.field, start, finish));
 		
 		
-		Actor actor = new Actor(field, DIMX, DIMY, start, finish);
+		Actor actor1 = new Actor(field, DIMX, DIMY, start, finish);
+		Actor actor2 = new Actor(field, DIMX, DIMY, start, finish);
+		Actor actor3 = new Actor(field, DIMX, DIMY, start, finish);
 		
-		System.out.println(actor);
+		//System.out.println(actor);
 		
 		promptEnterKey();
 		
 		for(int i = 1; i < 10000; i++ ){
 			System.out.println(i);
-			StepResult step;
+			StepResult step1 = StepResult.Step;
+			StepResult step2 = StepResult.Step;
+			StepResult step3 = StepResult.Step;
+			
 			try {
-				step = actor.step(Method.Backward);
-				System.out.println(actor);
-				
-				switch(step){
-					case Success:
-						System.out.println("Success!");
-						actor.printExp();
-						return;
-					case NoPath:
-						System.out.println("No Path Found");
-						actor.printExp();
-						return;
-					default:
-						break;
+				if(step1 != null && !step1.equals(StepResult.Success) && !step1.equals(StepResult.NoPath)){
+					step1 = actor1.step(Method.Forward);
+					System.out.println("FORWARD: ");
+					System.out.println(actor1);
 				}
+				
+				if(step2 != null && !step2.equals(StepResult.Success) && !step2.equals(StepResult.NoPath)){
+					step2 = actor2.step(Method.Backward);
+					System.out.println("BACKWARD: ");
+					System.out.println(actor2);
+				}
+				
+				if(step3 != null && !step3.equals(StepResult.Success) && !step3.equals(StepResult.NoPath)){
+					step3 = actor3.step(Method.Adaptive);
+					System.out.println("ADAPTIVE: ");
+					System.out.println(actor3);
+				}
+				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
 			
-			try {
+			/*try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-			}
-			//promptEnterKey();
-		}*/
+			}*/
+			promptEnterKey();
+		}
 		
 	}
 	

@@ -245,8 +245,8 @@ public class Actor {
 				return StepResult.NoPath;
 			}
 			
-			totalExpanded += plan.getExp();
-			/*System.out.println(plan);
+			/*totalExpanded += plan.getExp();
+			System.out.println(plan);
 			System.out.println("New Path:");
 			System.out.println(this);
 			promptEnterKey();*/
