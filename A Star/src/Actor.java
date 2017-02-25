@@ -411,6 +411,11 @@ public class Actor {
 		System.out.println("Total expanded nodes: " + totalExpanded + "\n");
 	}
 	
+	
+	public int getExpanded(){
+		return totalExpanded;
+	}
+	
 	public static void promptEnterKey(){
 		   System.out.println("Press \"ENTER\" to continue...");
 		   Scanner scanner = new Scanner(System.in);

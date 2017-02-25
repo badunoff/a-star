@@ -2,37 +2,56 @@ import java.awt.Point;
 import java.util.Scanner;
 
 public class Driver {
-	public static final int DIMX = 20;
-	public static final int DIMY = 20;
+	public static final int DIMX = 101;
+	public static final int DIMY = 101;
 	public static final int PERCENT_OPEN = 70;
+	public static final int NUM_MAPS = 50;
 	
 	public static void main(String[] args){ 
 		
-		generateMaps(50);
+		generateMaps(NUM_MAPS);
 		
 		Point start = new Point();
 		Point finish = new Point();
 		
-		for(int j = 50; j > 0; j--){
+		int forwardSteps = 0;
+		int forwardNodes = 0;
+
+		int backwardSteps = 0;
+		int backwardNodes = 0;
+		
+		int adaptiveSteps = 0;
+		int adaptiveNodes = 0;
+		
+		for(int j = NUM_MAPS; j > 0; j--){
 			System.out.println("Map " + j);
 			Field field = ReadAndWriteBoard.read("Map" + j, start, finish);
 			
-			runMap(field, start, finish, Method.Forward);
-			runMap(field, start, finish, Method.Backward);
-			runMap(field, start, finish, Method.Adaptive);
+			Point temp = new Point();
+			
+			temp = runMap(field, start, finish, Method.Forward);
+			forwardSteps += temp.x;
+			forwardNodes += temp.y;
+			
+			temp = runMap(field, start, finish, Method.Backward);
+			backwardSteps += temp.x;
+			backwardNodes += temp.y;
+			
+			temp = runMap(field, start, finish, Method.Adaptive);
+			adaptiveSteps += temp.x;
+			adaptiveNodes += temp.y;
 		}
+		
+		
+		System.out.println("Forward Step Average: " + (forwardSteps/NUM_MAPS));
+		System.out.println("Forward Expansions Average: " + (forwardNodes/NUM_MAPS));
+		
 
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		System.out.println("Backward Step Average: " + (backwardSteps/NUM_MAPS));
+		System.out.println("Backward Expansions Average: " + (backwardNodes/NUM_MAPS));
+
+		System.out.println("Adaptive Step Average: " + (adaptiveSteps/NUM_MAPS));
+		System.out.println("Adaptive Expansions Average: " + (adaptiveNodes/NUM_MAPS));
 		
 		
 		
@@ -95,7 +114,7 @@ public class Driver {
 		
 	}
 	
-	public static void runMap(Field field, Point start, Point finish, Method method){
+	public static Point runMap(Field field, Point start, Point finish, Method method){
 		Actor actor = new Actor(field, DIMX, DIMY, start, finish);
 		String type = "";
 		
@@ -133,6 +152,7 @@ public class Driver {
 					case NoPath:
 						System.out.println("\t" + type + " Actor");
 						System.out.println("\t\tNo Path Found");
+						System.out.println("\t\tSteps taken: " + i);
 						System.out.print("\t\t");
 						actor.printExp();
 						br = true;
@@ -145,6 +165,8 @@ public class Driver {
 				e.printStackTrace();
 			}
 		}
+		
+		return new Point(i, actor.getExpanded());
 	}
 	
 	
